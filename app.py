@@ -63,7 +63,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Custom CSS styling for cards and badges
+
 st.markdown(
     """
     <style>
@@ -135,9 +135,7 @@ navigation_page = st.sidebar.radio(
 
 
 
-# ==============================================================================
-# 1. EXECUTIVE OVERVIEW
-# ==============================================================================
+
 if navigation_page == "Executive Overview":
     st.title("📊 Executive Revenue Protection Overview")
     st.markdown(
@@ -168,7 +166,7 @@ if navigation_page == "Executive Overview":
 
     st.markdown("---")
 
-    # High-level analytical charts
+   
     col_chart1, col_chart2 = st.columns(2)
 
     with col_chart1:
@@ -222,9 +220,7 @@ if navigation_page == "Executive Overview":
     st.dataframe(top_disp, use_container_width=True, hide_index=True)
 
 
-# ==============================================================================
-# 2. CUSTOMER RISK ANALYSIS (ACTION CENTER & BATCH DISPATCH)
-# ==============================================================================
+
 elif navigation_page == "Customer Risk Analysis":
     st.title("🎯 Customer Risk Analysis & Retention Action Center")
     st.markdown(
@@ -233,30 +229,30 @@ elif navigation_page == "Customer Risk Analysis":
 
     st.sidebar.subheader("Filter Customers")
 
-    # Risk level filter
+    
     all_risk_levels = ["Low Risk", "Medium Risk", "High Risk", "Critical Risk"]
     existing_risk = [r for r in all_risk_levels if r in scored_df["risk_level"].unique()]
     selected_risk = st.sidebar.multiselect("Risk Tier", options=existing_risk, default=existing_risk)
 
-    # Plan filter
+   
     all_plans = scored_df["plan_type"].unique().tolist()
     selected_plans = st.sidebar.multiselect("Subscription Plan", options=all_plans, default=all_plans)
 
-    # Churn probability slider
+    
     prob_range = st.sidebar.slider("Churn Probability Range", 0.0, 1.0, (0.0, 1.0), step=0.05)
 
-    # Payment failures filter
+   
     max_fails = int(scored_df["payment_failures"].max())
     fail_range = st.sidebar.slider("Payment Failures Count", 0, max_fails, (0, max_fails))
 
-    # Revenue at risk filter
+    
     max_rev_risk = float(scored_df["revenue_at_risk"].max())
     min_rev_risk = st.sidebar.slider("Min. Revenue at Risk (₹)", 0.0, max_rev_risk, 0.0, step=100.0)
 
-    # Realism filter: Only positive ROI
+   
     only_profitable = st.sidebar.checkbox("Show Only Profitable Interventions (Net Value > 0)", value=False)
 
-    # Apply filters
+    
     filter_mask = (
         (scored_df["risk_level"].isin(selected_risk))
         & (scored_df["plan_type"].isin(selected_plans))
@@ -272,7 +268,7 @@ elif navigation_page == "Customer Risk Analysis":
 
     filtered_df = scored_df[filter_mask].copy()
 
-    # Metrics on filtered population
+   
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Matching Customers", f"{len(filtered_df):,}")
     c2.metric("Gross Revenue at Risk", f"₹{filtered_df['revenue_at_risk'].sum():,.2f}")
@@ -321,7 +317,7 @@ elif navigation_page == "Customer Risk Analysis":
         dispatch_candidates = filtered_df[filtered_df["recommended_action"] == target_action]
         st.write(f"Target Queue: **{len(dispatch_candidates)}** customers ready for `{target_action}`.")
 
-        # Prepare dispatch payload
+        
         dispatch_export = dispatch_candidates[[
             "user_id", "plan_type", "monthly_fee", "tenure_months",
             "payment_failures", "churn_probability", "recommended_action",
@@ -342,9 +338,8 @@ elif navigation_page == "Customer Risk Analysis":
         )
 
 
-# ==============================================================================
-# 3. ANALYTICS & BEHAVIORAL EDA
-# ==============================================================================
+
+
 elif navigation_page == "Analytics & Behavioral EDA":
     st.title("📈 Behavioral & Exploratory Data Analytics")
     st.markdown(
@@ -389,9 +384,7 @@ elif navigation_page == "Analytics & Behavioral EDA":
         )
 
 
-# ==============================================================================
-# 4. CUSTOMER DEEP-DIVE & AI OUTREACH
-# ==============================================================================
+
 elif navigation_page == "Customer Deep-Dive & AI Outreach":
     st.title("🔍 Individual Customer Diagnostic & AI Outreach Engine")
     st.markdown(
@@ -482,9 +475,7 @@ elif navigation_page == "Customer Deep-Dive & AI Outreach":
             st.info("Click 'Generate Personalized Recovery Message' to generate outreach copy.")
 
 
-# ==============================================================================
-# 5. REVENUE RECOVERY SIMULATOR & DECISION FRONTIER
-# ==============================================================================
+
 elif navigation_page == "Revenue Recovery Simulator":
     st.title("🧮 Interactive Revenue Recovery Simulator")
     st.markdown(
@@ -538,7 +529,7 @@ elif navigation_page == "Revenue Recovery Simulator":
                 step=1.0,
             )
 
-        # Simulation calculations
+       
         sim_at_risk_cohort = sim_cohort * (sim_churn_rate / 100.0)
         sim_gross_risk = sim_at_risk_cohort * sim_fee * sim_horizon
         sim_recovered_rev = sim_gross_risk * (sim_recovery_rate / 100.0)
@@ -556,7 +547,7 @@ elif navigation_page == "Revenue Recovery Simulator":
         m3.metric("Net Recovered Profit", f"₹{sim_net_margin:,.2f}", f"{(sim_net_margin / max(sim_cost, 1)):.1f}x ROI")
         m4.metric("Saved Customers", f"{int(sim_recovered_customers):,} retained accounts")
 
-        # Waterfall comparison chart
+       
         sim_chart_df = pd.DataFrame({
             "Financial Metric": ["Gross Revenue at Risk", "Intervention Cost", "Net Recovered Profit", "Net Unrecovered Risk"],
             "Amount (₹)": [sim_gross_risk, sim_cost, sim_net_margin, sim_unrecovered_risk],
@@ -630,9 +621,7 @@ elif navigation_page == "Revenue Recovery Simulator":
         st.plotly_chart(fig_frontier, use_container_width=True)
 
 
-# ==============================================================================
-# 6. MODEL GOVERNANCE & EXPLAINABILITY
-# ==============================================================================
+
 elif navigation_page == "Model Governance & Explainability":
     st.title("🛡️ Model Governance, Evaluation & Explainability")
     st.markdown(
