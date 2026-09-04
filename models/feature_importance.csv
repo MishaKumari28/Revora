@@ -1,0 +1,14 @@
+Feature,Importance
+payment_failures,0.29720956
+last_login_days_ago,0.10706689
+avg_weekly_usage_hours,0.0963103
+support_tickets,0.08650008
+tickets_per_tenure_month,0.073340565
+failures_per_tenure_month,0.06447586
+tenure_months,0.061687753
+inactivity_ratio,0.05643332
+plan_type_Standard,0.05475619
+usage_to_fee_ratio,0.052763373
+monthly_fee,0.049456175
+plan_type_Basic,0.0
+plan_type_Premium,0.0
